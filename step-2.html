@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<style>
+
+
+.name {
+text-anchor: middle;
+font-size: 12px;
+fill: #000;
+}
+
+.proven-victims {
+fill: #e34a33;
+}
+
+.possible-victims {
+fill: #fdbb84;
+}
+
+h1 {
+color: #000;
+font-size: 25px;
+text-align: center;
+margin-top: 100px;
+}
+
+body {
+text-align: center;
+}
+</style>
+<body>
+<h1>Top Six Serial Killers in US vs. Russia</h1>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var svg = d3.select("body").append("svg")
+    .attr("width", 875)
+    .attr("height", 300);
+    
+var bubbles = svg.append("g").attr("class", "bubbles")
+
+function ready(error, serial_killers) {
+    console.log(serial_killers)
+    
+//     It will be the proven kills should probably have the class "proven-victims".
+// Give them all a radius of 4 (note: it will look just like one circle
+
+    bubbles.selectAll(".possible-victims")
+      .data(serial_killers)
+      .enter()
+      .append("circle")
+      .attr("class", "possible-victims")
+      .attr('cx', function(d, i) {
+        return i * 140 + 100;
+       })
+      .attr("r", function(d) {
+        return d["possible_victims"];
+       })
+      .attr('cy',function(d) {
+        return 250 - d["possible_victims"];
+        });
+
+    bubbles.selectAll(".proven-victims")
+      .data(serial_killers)
+      .enter()
+      .append("circle")
+      .attr("class", "proven-victims")
+      .attr('cx', function(d, i) {
+        return i * 140 + 100;
+       })
+      .attr("r", function(d) {
+        return d["proven_victims"];
+       })
+      .attr('cy',function(d) {
+        return 250 - d["proven_victims"];
+      });
+
+    bubbles.selectAll(".name")
+      .data(serial_killers)
+      .enter()
+      .append("text")
+      .attr("class", "name")
+      .attr('x', function(d, i) {
+        return i * 140 + 100;
+       })
+      .attr('y', 40)
+      .text(function(d){
+        return d["name"];
+      });
+ 
+}
+
+queue()
+    .defer(d3.csv, "serial_killers.csv")
+    .await(ready);
+
+      
+</script>
+</body>
+</html>
+
